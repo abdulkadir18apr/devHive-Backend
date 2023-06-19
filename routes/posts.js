@@ -2,7 +2,20 @@ const Post=require("../models/posts");
 const express=require("express");
 const router=express.Router();
 const authRequired= require("../middleware/authUtils");
-const upload=require("../middleware/upload");
+
+
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+const cloudinary =require("cloudinary").v2;
+const streamifier = require('streamifier');
+
+cloudinary.config({ 
+    cloud_name: 'durr83iqg', 
+    api_key: '993891134356919', 
+    api_secret: 'T7UnmkIbU31Oqk_vWUoQtvYinWc' 
+  });
+
 
 
 
@@ -10,8 +23,21 @@ router.post("/user/post",authRequired,upload.single('post-image'),async(req,res)
     try{
         let postImage=null;
         if(req.file){
-             postImage=req.file.path;
+            uploadResult = await new Promise((resolve, reject) =>{
+                const stream =  cloudinary.uploader.upload_stream(async (error, result) => {
+                    if (error) {
+                      reject(error)
+                    }
+                    else{
+                      resolve(result)
+                    }
+                })
+                streamifier.createReadStream(req.file.buffer).pipe(stream);
+             })
         }
+
+        postImage=uploadResult.secure_url
+
         const post=await Post.create({
             content:req.body.content,
             postImage:postImage,
