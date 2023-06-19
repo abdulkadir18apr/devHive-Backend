@@ -55,9 +55,8 @@ router.post("/user/post",authRequired,upload.single('post-image'),async(req,res)
 
 router.get("/posts",authRequired,async(req,res)=>{
     try{
-        const posts=await Post.find();
-        return res.json({success:true,posts:posts}).populate('user');
-
+        const posts=await Post.find().populate('user');
+        return res.json({success:true,posts:posts});
     }
     catch(err){
         return res.status(400).json({ success:false, msg: err.message });
