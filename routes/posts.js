@@ -35,9 +35,11 @@ router.post("/user/post",authRequired,upload.single('post-image'),async(req,res)
                 })
                 streamifier.createReadStream(req.file.buffer).pipe(stream);
              })
+
+             postImage=uploadResult.secure_url
         }
 
-        postImage=uploadResult.secure_url
+   
 
         const post=await Post.create({
             content:req.body.content,
