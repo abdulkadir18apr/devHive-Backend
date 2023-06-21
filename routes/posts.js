@@ -16,9 +16,6 @@ cloudinary.config({
     api_secret: 'T7UnmkIbU31Oqk_vWUoQtvYinWc' 
   });
 
-
-
-
 router.post("/user/post",authRequired,upload.single('post-image'),async(req,res)=>{
     try{
         let postImage=null;
@@ -140,10 +137,10 @@ router.post("/posts/like/:postId",authRequired,async(req,res)=>{
         if(!post){
             return res.setMaxListeners(404).json({success:false,msg:"post not Found"});
         }
-        if(post.likes.likedBy.some((id)=>id===userId)){
+        if(post.likes.likedBy.some((id)=>id.toString()===userId.toString())){
             return res.status(400).json({success:false,msg:"already liked"});
         }
-        post.likes.dislikedBy=post.likes.dislikedBy.filter((id)=>id!==userId);
+        post.likes.dislikedBy=post.likes.dislikedBy.filter((id)=>id.toString()!==userId.toString());
         post.likes.likeCount+=1;
         post.likes.likedBy.push(userId);
         post.updatedAt=Date.now();
@@ -167,7 +164,7 @@ router.post("/posts/dislike/:postId",authRequired,async(req,res)=>{
         if(post.likes.dislikedBy.some((id)=>id===userId)){
             return res.status(400).json({success:false,msg:"already disliked"});
         }
-        post.likes.likedBy=post.likes.likedBy.filter((id)=>id!==userId);
+        post.likes.likedBy=post.likes.likedBy.filter((id)=>id.toString()!==userId.toString());
         post.likes.likeCount-=1;
         post.likes.dislikedBy.push(userId);
         post.updatedAt=Date.now();
