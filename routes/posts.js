@@ -22,6 +22,7 @@ cloudinary.config({
 router.post("/user/post",authRequired,upload.single('post-image'),async(req,res)=>{
     try{
         let postImage=null;
+        let uploadResult;
         if(req.file){
             uploadResult = await new Promise((resolve, reject) =>{
                 const stream =  cloudinary.uploader.upload_stream(async (error, result) => {
