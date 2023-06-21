@@ -67,7 +67,7 @@ router.post("/profile",authRequired,upload.single('profile-image'),async(req,res
         let profileImage=null;
         let uploadResult=null;
         if(req.file){
-            console.log("Inside");
+
 
                 uploadResult = await new Promise((resolve, reject) =>{
                 const stream =  cloudinary.uploader.upload_stream(async (error, result) => {
@@ -128,7 +128,7 @@ router.post("/bookmark/:postId",authRequired,async(req,res)=>{
         if(!user){
             return res.status(404).json({success:false,msg:"user not found"});
         }
-        const isBookmarked=user.bookmarks.some((currPost)=>currPost===postId);
+        const isBookmarked=user.bookmarks.some((currPost)=>currPost.toString()===postId);
         if(isBookmarked){
             return res.status(400).json({success:false,msg:"already bookmarked"});
         }
