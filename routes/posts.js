@@ -133,7 +133,7 @@ router.post("/posts/like/:postId",authRequired,async(req,res)=>{
     const postId=req.params.postId;
     const userId=req.user.id;
     try{
-        const post=await Post.findById(postId);
+        const post=await Post.findById(postId).populate('user');
         if(!post){
             return res.setMaxListeners(404).json({success:false,msg:"post not Found"});
         }
