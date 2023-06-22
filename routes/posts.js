@@ -202,7 +202,7 @@ router.post("/posts/comment/:postId",authRequired,async(req,res)=>{
             content:req.body.content,
             user:req.user.id
         }
-        const post=await Post.findByIdAndUpdate(postId,{$push:{comments:comment}},{new:true});
+        const post=await Post.findByIdAndUpdate(postId,{$push:{comments:comment}},{new:true}).populate('user');;
         if(!post){
             res.status(404).json({success:false,msg:"No post Found"});
         }
