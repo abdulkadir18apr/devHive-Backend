@@ -67,8 +67,6 @@ router.post("/profile",authRequired,upload.single('profile-image'),async(req,res
         let profileImage=null;
         let uploadResult=null;
         if(req.file){
-
-
                 uploadResult = await new Promise((resolve, reject) =>{
                 const stream =  cloudinary.uploader.upload_stream(async (error, result) => {
                     if (error) {
@@ -80,10 +78,9 @@ router.post("/profile",authRequired,upload.single('profile-image'),async(req,res
                 })
                 streamifier.createReadStream(req.file.buffer).pipe(stream);
              })
+             profileImage=uploadResult.secure_url;
             
         }
-        profileImage=uploadResult.secure_url;
-
         const profile={
             bio:req.body?.bio || user?.profile?.bio,
             portfolio:req.body?.portfolio || user?.profile.portfolio,
@@ -218,7 +215,7 @@ router.post("/unfollow/:followUserId",authRequired,async(req,res)=>{
         const filteredFollowers=userTobeunFollowed.followers.filter((currId)=>currId.toString()!==req.user.id);
         userTobeunFollowed.followers=[...filteredFollowers];
         
-        await user.save();
+        await user.save(    );
         await userTobeunFollowed.save();
 
         return res.json({success:true,user,userTobeunFollowed});
