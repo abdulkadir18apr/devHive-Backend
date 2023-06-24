@@ -62,7 +62,7 @@ router.post("/profile",authRequired,upload.single('profile-image'),async(req,res
             user.firstName=req.body.firstName
         }
         if(req.body?.lastName){
-            user.firstName=req.body.lastName
+            user.lastName=req.body.lastName
         }
         let profileImage=null;
         let uploadResult=null;
@@ -86,9 +86,12 @@ router.post("/profile",authRequired,upload.single('profile-image'),async(req,res
             portfolio:req.body?.portfolio || user?.profile.portfolio,
             profileImage:profileImage!==null?profileImage:user?.profile?.profileImage
         }
+        await user.save();
+      
 
         const updatedUser=await User.findByIdAndUpdate(req.user.id,{profile:profile},{new:true});
-        await user.save();
+      
+        
         return res.json({success:true,user:updatedUser});
 
     }
