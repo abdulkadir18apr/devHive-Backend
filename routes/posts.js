@@ -69,7 +69,7 @@ router.get("/posts",authRequired,async(req,res)=>{
 router.get("/posts/user/:userid",authRequired,async(req,res)=>{
     const userId=req.params.userid
     try{
-        const posts=await Post.find({user:userId});
+        const posts=await Post.find({user:userId}).populate('user');
 
         return res.json({success:true,posts})
 
