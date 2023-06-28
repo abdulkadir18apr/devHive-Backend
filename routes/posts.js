@@ -87,7 +87,7 @@ router.get("/posts/user/:userid",authRequired,async(req,res)=>{
 router.post("/posts/edit/:postId",upload.single('post-image'),authRequired,async(req,res)=>{
     const postId=req.params.postId;
     try{
-        const post=await Post.findOne({_id:postId,user:req.user.id});
+        const post=await Post.findOne({_id:postId,user:req.user.id}).populate('user');
         if(!post){
             return res.status(400).json({success:false,mag:"Post not Found"});
         }
