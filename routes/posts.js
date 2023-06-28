@@ -91,9 +91,26 @@ router.post("/posts/edit/:postId",upload.single('post-image'),authRequired,async
         if(!post){
             return res.status(400).json({success:false,mag:"Post not Found"});
         }
+        let postImage=null;
+        let uploadResult;
         if(req.file){
-            post.postImage=req.file.path
+            uploadResult = await new Promise((resolve, reject) =>{
+                const stream =  cloudinary.uploader.upload_stream(async (error, result) => {
+                    if (error) {
+                      reject(error)
+                    }
+                    else{
+                      resolve(result)
+                    }
+                })
+                streamifier.createReadStream(req.file.buffer).pipe(stream);
+             })
+
+             postImage=uploadResult.secure_url
+
+             post.postImage=postImage;
         }
+
         if(req.body?.content){
             post.content=req.body.content;
         }
@@ -108,7 +125,7 @@ router.post("/posts/edit/:postId",upload.single('post-image'),authRequired,async
 
 //delete the post
 
-router.delete("/posts/:postId",authRequired,async(req,res)=>{
+router.delete(" ",authRequired,async(req,res)=>{
     const postId=req.params.postId;
     const userId=req.user.id;
     try{
