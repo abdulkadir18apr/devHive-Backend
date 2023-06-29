@@ -230,9 +230,10 @@ router.post("/unfollow/:followUserId",authRequired,async(req,res)=>{
 })
 
 //route to get followes and following of user
-router.get("/followers/fetch-followers",authRequired,async(req,res)=>{
+router.get("/followers/fetch-followers/:userId",authRequired,async(req,res)=>{
+    const {userId}=req.params;
     try{
-        const user=await User.findById(req.user.id).populate('followers').populate('following');
+        const user=await User.findById(userId).populate('followers').populate('following');
         if(!user){
             return res.status(400).json({success:false,msg:"user not found"});
         }
