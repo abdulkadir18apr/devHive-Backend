@@ -125,7 +125,7 @@ router.post("/posts/edit/:postId",upload.single('post-image'),authRequired,async
 
 //delete the post
 
-router.delete(" ",authRequired,async(req,res)=>{
+router.delete("/posts/:postId",authRequired,async(req,res)=>{
     const postId=req.params.postId;
     const userId=req.user.id;
     try{
